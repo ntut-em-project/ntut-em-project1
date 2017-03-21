@@ -41,6 +41,8 @@ public class WebCrawler {
                 System.out.println(String.format("Found Link: %s", newWebsite.getUrl()));
             }
         } catch (IOException e) {
+            web.setTitle("--ERROR PAGE--");
+            web.setVisited();
             e.printStackTrace();
         }
     }

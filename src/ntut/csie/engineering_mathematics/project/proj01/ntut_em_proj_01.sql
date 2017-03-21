@@ -25,8 +25,8 @@ CREATE TABLE `relation` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `ref_tgt_lim` (`ref_uid`,`tgt_uid`) USING BTREE,
   KEY `tgt_uid_fk` (`tgt_uid`),
-  CONSTRAINT `ref_uid_fk` FOREIGN KEY (`ref_uid`) REFERENCES `websites` (`id`),
-  CONSTRAINT `tgt_uid_fk` FOREIGN KEY (`tgt_uid`) REFERENCES `websites` (`id`)
+  CONSTRAINT `ref_uid_fk` FOREIGN KEY (`ref_uid`) REFERENCES `websites` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `tgt_uid_fk` FOREIGN KEY (`tgt_uid`) REFERENCES `websites` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------

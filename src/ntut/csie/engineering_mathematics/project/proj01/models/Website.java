@@ -9,7 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -149,17 +152,18 @@ public class Website {
     public static boolean commit() {
         try {
             PreparedStatement ps = Storage.getConnection().prepareStatement(
-                    "INSERT INTO `websites` (`url_hash`, `title`, `url`, `create_time`, `view_time`) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE view_time=?"
+                    "INSERT INTO `websites` (`id`, `url_hash`, `title`, `url`, `create_time`, `view_time`) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE view_time=?"
             );
             int count = 0;
             for (Website website : _websitePool.values()) {
                 //if (website.getId() < _lastMaxId) continue;
-                ps.setString(1, website._urlHash);
-                ps.setString(2, website._title);
-                ps.setString(3, website._url);
-                ps.setTimestamp(4, website._createTime);
-                ps.setTimestamp(5, website._viewTime);
+                ps.setInt(1, website.getId());
+                ps.setString(2, website._urlHash);
+                ps.setString(3, website._title);
+                ps.setString(4, website._url);
+                ps.setTimestamp(5, website._createTime);
                 ps.setTimestamp(6, website._viewTime);
+                ps.setTimestamp(7, website._viewTime);
 
                 ps.addBatch();
                 count++;
