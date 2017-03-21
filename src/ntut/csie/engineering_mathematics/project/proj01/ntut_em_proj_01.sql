@@ -40,8 +40,8 @@ DROP TABLE IF EXISTS `websites`;
 CREATE TABLE `websites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url_hash` char(64) CHARACTER SET ascii NOT NULL COMMENT 'sha256',
-  `title` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `url` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
   `page_rank` double NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `view_time` timestamp NULL DEFAULT NULL,
