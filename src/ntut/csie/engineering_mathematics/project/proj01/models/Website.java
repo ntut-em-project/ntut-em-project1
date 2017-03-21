@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * Created by s911415 on 2017/03/21.
@@ -22,7 +22,7 @@ public class Website {
     public static Queue<Website> unfinishedQueue = new LinkedList<>();
     private static int _currentMaxId = 0;
     private static int _lastMaxId = 0;
-    private static ConcurrentHashMap<Integer, Website> _websitePool = new ConcurrentHashMap<>();
+    private static ConcurrentSkipListMap<Integer, Website> _websitePool = new ConcurrentSkipListMap<>();
     private static HashMap<String, Website> _urlHashPool = new HashMap<>();
     private static boolean _initialized = false;
 
@@ -149,13 +149,16 @@ public class Website {
 
     }
 
-    public static boolean commit() {
+    synchronized public static boolean commit() {
         try {
             PreparedStatement ps = Storage.getConnection().prepareStatement(
-                    "INSERT INTO `websites` (`id`, `url_hash`, `title`, `url`, `create_time`, `view_time`) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE view_time=?"
+                    "INSERT INTO `websites` (`id`, `url_hash`, `title`, `url`, `create_time`, `view_time`) " +
+                            "VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY " +
+                            "UPDATE title=?, view_time=?"
             );
             int count = 0;
-            for (Website website : _websitePool.values()) {
+            ConcurrentSkipListMap<Integer, Website> copiedPool = new ConcurrentSkipListMap<>(_websitePool);
+            for (Website website : copiedPool.values()) {
                 //if (website.getId() < _lastMaxId) continue;
                 ps.setInt(1, website.getId());
                 ps.setString(2, website._urlHash);
@@ -163,7 +166,9 @@ public class Website {
                 ps.setString(4, website._url);
                 ps.setTimestamp(5, website._createTime);
                 ps.setTimestamp(6, website._viewTime);
-                ps.setTimestamp(7, website._viewTime);
+
+                ps.setString(7, website._title);
+                ps.setTimestamp(8, website._viewTime);
 
                 ps.addBatch();
                 count++;

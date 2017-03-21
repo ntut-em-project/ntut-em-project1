@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * Created by s911415 on 2017/03/21.
  */
 public class Relation {
-    private static SortedMap<Long, Relation> _relationPool = new ConcurrentSkipListMap<>();
+    private static ConcurrentSkipListMap<Long, Relation> _relationPool = new ConcurrentSkipListMap<>();
     private int _id1, _id2;
     private long _hash;
     private static boolean _initialized = false;
@@ -84,13 +84,14 @@ public class Relation {
 
     }
 
-    public static boolean commit() {
+    synchronized public static boolean commit() {
         try {
             PreparedStatement ps = Storage.getConnection().prepareStatement(
                     "INSERT INTO relation (`ref_uid`, `tgt_uid`) VALUES (?, ?) ON DUPLICATE KEY UPDATE ref_uid=ref_uid"
             );
             int count = 0;
-            for (Relation relation : _relationPool.values()) {
+            ConcurrentSkipListMap<Long, Relation> copiedPool =new ConcurrentSkipListMap<>(_relationPool);
+            for (Relation relation : copiedPool.values()) {
                 ps.setInt(1, relation._id1);
                 ps.setInt(2, relation._id2);
 
