@@ -21,7 +21,6 @@ public class WebCrawler {
             System.out.println(String.format("Getting: %s", web.getUrl()));
 
             Document doc = Jsoup.connect(web.getUrl()).timeout(App.CRAWL_TIMEOUT).followRedirects(true).get();
-            web.setVisited();
             Element title = doc.getElementsByTag("title").first();
             if (title == null) {
                 web.setTitle("Untitled");
@@ -40,8 +39,9 @@ public class WebCrawler {
 
                 System.out.println(String.format("Found Link: %s", newWebsite.getUrl()));
             }
+            web.setVisited();
         } catch (IOException e) {
-            web.setTitle("--ERROR PAGE--");
+            web.setTitle("--ERROR PAGE--" + e.getMessage());
             web.setVisited();
             e.printStackTrace();
         }
