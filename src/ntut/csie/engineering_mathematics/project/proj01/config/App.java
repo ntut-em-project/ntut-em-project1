@@ -6,4 +6,6 @@ package ntut.csie.engineering_mathematics.project.proj01.config;
 public class App {
     public static final String ENCODING = "UTF-8";
     public static final int MAX_ROW_COUNT = 1000;
+    public static final int SYNC_INTERVAL_MS = 180 * 1000;
+    public static final int CRAWL_DELAY = 250;
 }
