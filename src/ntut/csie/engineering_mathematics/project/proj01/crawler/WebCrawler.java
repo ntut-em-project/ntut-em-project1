@@ -1,5 +1,6 @@
 package ntut.csie.engineering_mathematics.project.proj01.crawler;
 
+import ntut.csie.engineering_mathematics.project.proj01.config.App;
 import ntut.csie.engineering_mathematics.project.proj01.models.Relation;
 import ntut.csie.engineering_mathematics.project.proj01.models.Website;
 import org.jsoup.Jsoup;
@@ -19,7 +20,7 @@ public class WebCrawler {
         try {
             System.out.println(String.format("Getting: %s", web.getUrl()));
 
-            Document doc = Jsoup.connect(web.getUrl()).followRedirects(true).get();
+            Document doc = Jsoup.connect(web.getUrl()).timeout(App.CRAWL_TIMEOUT).followRedirects(true).get();
             web.setVisited();
             Element title = doc.getElementsByTag("title").first();
             if (title == null) {

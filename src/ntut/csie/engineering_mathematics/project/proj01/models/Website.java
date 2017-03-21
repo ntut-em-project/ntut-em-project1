@@ -153,7 +153,7 @@ public class Website {
             );
             int count = 0;
             for (Website website : _websitePool.values()) {
-                if (website.getId() < _lastMaxId) continue;
+                //if (website.getId() < _lastMaxId) continue;
                 ps.setString(1, website._urlHash);
                 ps.setString(2, website._title);
                 ps.setString(3, website._url);
