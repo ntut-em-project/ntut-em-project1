@@ -25,7 +25,7 @@ CREATE TABLE `relation` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `ref_tgt_lim` (`ref_uid`,`tgt_uid`) USING BTREE,
   KEY `tgt_uid_fk` (`tgt_uid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of relation
@@ -38,14 +38,14 @@ DROP TABLE IF EXISTS `websites`;
 CREATE TABLE `websites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url_hash` char(64) CHARACTER SET ascii NOT NULL COMMENT 'sha256',
-  `title` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-  `url` text COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `page_rank` double NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `view_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `url_hash` (`url_hash`) USING HASH
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of websites
