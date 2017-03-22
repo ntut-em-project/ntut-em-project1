@@ -24,9 +24,7 @@ CREATE TABLE `relation` (
   `tgt_uid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ref_tgt_lim` (`ref_uid`,`tgt_uid`) USING BTREE,
-  KEY `tgt_uid_fk` (`tgt_uid`),
-  CONSTRAINT `ref_uid_fk` FOREIGN KEY (`ref_uid`) REFERENCES `websites` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `tgt_uid_fk` FOREIGN KEY (`tgt_uid`) REFERENCES `websites` (`id`) ON DELETE CASCADE
+  KEY `tgt_uid_fk` (`tgt_uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
@@ -41,7 +39,7 @@ CREATE TABLE `websites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url_hash` char(64) CHARACTER SET ascii NOT NULL COMMENT 'sha256',
   `title` varchar(512) COLLATE utf8_unicode_ci NOT NULL,
-  `url` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
+  `url` text COLLATE utf8_unicode_ci NOT NULL,
   `page_rank` double NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `view_time` timestamp NULL DEFAULT NULL,

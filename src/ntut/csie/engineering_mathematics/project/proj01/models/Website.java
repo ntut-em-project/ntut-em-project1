@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -75,12 +74,12 @@ public class Website {
         _websitePool.put(_id, this);
         _urlHashPool.put(_urlHash, this);
 
-        _createTime = new Timestamp(new Date().getTime());
+        _createTime = new Timestamp(System.currentTimeMillis());
         _viewTime = null;
     }
 
     public void setVisited() {
-        _viewTime = new Timestamp(new Date().getTime());
+        _viewTime = new Timestamp(System.currentTimeMillis());
     }
 
     public int getId() {

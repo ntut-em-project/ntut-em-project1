@@ -1,5 +1,6 @@
 package ntut.csie.engineering_mathematics.project.proj01.models;
 
+import ntut.csie.engineering_mathematics.project.helper.Crypt;
 import ntut.csie.engineering_mathematics.project.proj01.Storage;
 import ntut.csie.engineering_mathematics.project.proj01.config.App;
 
@@ -25,7 +26,7 @@ public class Relation {
     private static String calcHashTwoWebsite(int ref, int tgt) {
         String id1 = String.valueOf(ref);
         String id2 = String.valueOf(tgt);
-        return id1 + "|" + id2;
+        return Crypt.sha256(id1 + "|" + id2);
     }
 
     public static boolean containRelation(Website ref, Website tgt) {
