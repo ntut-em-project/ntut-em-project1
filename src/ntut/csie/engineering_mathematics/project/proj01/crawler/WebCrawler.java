@@ -6,9 +6,10 @@ import ntut.csie.engineering_mathematics.project.proj01.models.Website;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by s911415 on 2017/03/21.
@@ -27,10 +28,15 @@ public class WebCrawler {
             } else {
                 web.setTitle(title.text().trim());
             }
-            Elements newsHeadlines = doc.select("a, area");
+            List<String> urls = new LinkedList<>();
+            for (Element e : doc.select("a, area")) {
+                urls.add(e.attr("abs:href").trim());
+            }
+            for (Element e : doc.select("frame, iframe")) {
+                urls.add(e.attr("abs:src").trim());
+            }
 
-            for (Element e : newsHeadlines) {
-                String url = e.attr("abs:href").trim();
+            for (final String url : urls) {
                 Website newWebsite = Website.getInstance(url);
                 if (newWebsite == null || web == newWebsite || Relation.containRelation(web, newWebsite)) {
                     continue;

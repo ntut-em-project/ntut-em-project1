@@ -9,9 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -24,6 +22,9 @@ public class Website {
     private static ConcurrentSkipListMap<Integer, Website> _websitePool = new ConcurrentSkipListMap<>();
     private static HashMap<String, Website> _urlHashPool = new HashMap<>();
     private static boolean _initialized = false;
+    private static final List<String> WHITE_LIST = Arrays.asList(
+      "ntut.edu.tw", "140.124"
+    );
 
     private int _id;
     private String _urlHash;
@@ -38,10 +39,11 @@ public class Website {
     }
 
     @Nullable
-    public static Website getInstance(String url) {
-        url = processUrl(url);
+    public static Website getInstance(String _url) {
+        final String url = processUrl(_url);
 
         if (url == null || url.isEmpty() || !url.startsWith("http")) return null;
+        if(WHITE_LIST.stream().noneMatch(url::contains)) return null;
 
         String hv = Crypt.sha256(url);
         Website w = _urlHashPool.get(hv);
