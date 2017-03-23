@@ -18,6 +18,8 @@ public class Relation {
     private String _hash;
     private static boolean _initialized = false;
 
+    public boolean _synced = false;
+
 
     private static String calcHashTwoWebsite(Website ref, Website tgt) {
         return calcHashTwoWebsite(ref.getId(), tgt.getId());
@@ -60,7 +62,7 @@ public class Relation {
                     int ref_id = resultSet.getInt("ref_uid");
                     int tgt_uid = resultSet.getInt("tgt_uid");
                     Relation r = new Relation(ref_id, tgt_uid);
-
+                    r._synced = true;
                 } catch (SQLException se) {
                     se.printStackTrace();
                 }
@@ -82,11 +84,14 @@ public class Relation {
             int count = 0;
             ConcurrentSkipListMap<String, Relation> copiedPool = new ConcurrentSkipListMap<>(_relationPool);
             for (Relation relation : copiedPool.values()) {
+                if (relation._synced) continue;
                 ps.setInt(1, relation._id1);
                 ps.setInt(2, relation._id2);
 
                 ps.addBatch();
                 count++;
+
+                relation._synced = true;
 
                 if (count % App.MAX_ROW_COUNT == 0) {
                     ps.executeBatch();

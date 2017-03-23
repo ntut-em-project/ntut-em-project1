@@ -3,7 +3,6 @@ package ntut.csie.engineering_mathematics.project.proj01.models;
 import com.sun.istack.internal.Nullable;
 import ntut.csie.engineering_mathematics.project.helper.Crypt;
 import ntut.csie.engineering_mathematics.project.proj01.Storage;
-import ntut.csie.engineering_mathematics.project.proj01.config.App;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,8 +22,13 @@ public class Website {
     private static HashMap<String, Website> _urlHashPool = new HashMap<>();
     private static boolean _initialized = false;
     private static final List<String> WHITE_LIST = Arrays.asList(
-      "ntut.edu.tw", "140.124"
+            "csie.ntut.edu.tw/", "gec.ntut.edu.tw/", "oaa.ntut.edu.tw/",".cc.ntut.edu.tw/", "/140.124"
     );
+    private static final List<String> BLOCK_LIST = Arrays.asList(
+            ".pdf", ".gif", ".png", ".jpg", ".doc", ".odt", ".xls", ".ppt", "downloadfile.php",
+            "140.124.9.15"//V 集合
+    );
+    public boolean _synced = false;
 
     private int _id;
     private String _urlHash;
@@ -43,7 +47,8 @@ public class Website {
         final String url = processUrl(_url);
 
         if (url == null || url.isEmpty() || !url.startsWith("http")) return null;
-        if(WHITE_LIST.stream().noneMatch(url::contains)) return null;
+        if (BLOCK_LIST.stream().anyMatch(url::contains)) return null;
+        if (WHITE_LIST.stream().noneMatch(url::contains)) return null;
 
         String hv = Crypt.sha256(url);
         Website w = _urlHashPool.get(hv);
@@ -132,6 +137,8 @@ public class Website {
 
                     if (_view == null) {
                         unfinishedQueue.add(w);
+                    } else {
+                        w._synced = true;
                     }
 
                     if (_id > initId) initId = _id;
@@ -150,17 +157,21 @@ public class Website {
 
     }
 
+    public boolean isDone() {
+        return this._viewTime != null && !this._title.isEmpty();
+    }
+
     synchronized public static boolean commit() {
         try {
-            PreparedStatement ps = Storage.getConnection().prepareStatement(
-                    "INSERT INTO `websites` (`id`, `url_hash`, `title`, `url`, `create_time`, `view_time`) " +
-                            "VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY " +
-                            "UPDATE title=?, view_time=?"
-            );
             int count = 0;
             ConcurrentSkipListMap<Integer, Website> copiedPool = new ConcurrentSkipListMap<>(_websitePool);
             for (Website website : copiedPool.values()) {
-                //if (website.getId() < _lastMaxId) continue;
+                PreparedStatement ps = Storage.getConnection().prepareStatement(
+                        "INSERT INTO `websites` (`id`, `url_hash`, `title`, `url`, `create_time`, `view_time`) " +
+                                "VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY " +
+                                "UPDATE title=?, view_time=?"
+                );
+                if (website._synced) continue;
                 ps.setInt(1, website.getId());
                 ps.setString(2, website._urlHash);
                 ps.setString(3, website._title);
@@ -171,17 +182,15 @@ public class Website {
                 ps.setString(7, website._title);
                 ps.setTimestamp(8, website._viewTime);
 
-                ps.addBatch();
-                count++;
-
-                if (count % App.MAX_ROW_COUNT == 0) {
-                    ps.executeBatch();
-                    count = 0;
+                try {
+                    ps.execute();
+                    if (website.isDone()) {
+                        website._synced = true;
+                    }
+                } catch (Exception e) {
+                    website._synced = false;
                 }
             }
-
-            //Force exec query
-            ps.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }

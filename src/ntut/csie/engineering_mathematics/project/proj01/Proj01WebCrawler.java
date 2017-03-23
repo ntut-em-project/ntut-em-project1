@@ -22,9 +22,16 @@ public class Proj01WebCrawler {
             long lastSyncTime = 0;
             while (!Website.unfinishedQueue.isEmpty()) {
                 Website w = Website.unfinishedQueue.poll();
-                new WebCrawler(w);
+                try {
+                    new WebCrawler(w);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 long curTime = System.currentTimeMillis();
+                if (lastSyncTime == 0) {
+                    lastSyncTime = curTime;
+                }
                 if (curTime - lastSyncTime > App.SYNC_INTERVAL_MS) {
                     task.run();
                     lastSyncTime = System.currentTimeMillis();
@@ -36,6 +43,7 @@ public class Proj01WebCrawler {
                     e.printStackTrace();
                 }
             }
+            task.run();
         });
 
         thread.start();

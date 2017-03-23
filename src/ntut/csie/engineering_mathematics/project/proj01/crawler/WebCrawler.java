@@ -28,6 +28,7 @@ public class WebCrawler {
             } else {
                 web.setTitle(title.text().trim());
             }
+
             List<String> urls = new LinkedList<>();
             for (Element e : doc.select("a, area")) {
                 urls.add(e.attr("abs:href").trim());
@@ -46,7 +47,7 @@ public class WebCrawler {
                 System.out.println(String.format("Found Link: %s", newWebsite.getUrl()));
             }
             web.setVisited();
-        } catch (IOException e) {
+        } catch (Exception e) {
             web.setTitle("--ERROR PAGE--" + e.getMessage());
             web.setVisited();
             e.printStackTrace();
