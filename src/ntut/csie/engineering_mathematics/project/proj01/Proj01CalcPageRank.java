@@ -43,7 +43,11 @@ public class Proj01CalcPageRank {
             //計算機率矩陣
             System.out.println("Calcuating probability matrix...");
             for (int i = 0; i < N; i++) {
-                ml.eval(String.format("P(:,%d) = P(:,%d) / nnz(P(:,%d));", i + 1, i + 1, i + 1));
+                ml.eval(String.format("count = nnz(P(:,%d));", i + 1));
+                int count = ml.<Double>getVariable("count").intValue();
+                if(count != 0){
+                    ml.eval(String.format("P(:,%d) = P(:,%d) / %d;", i + 1, i + 1, count));
+                }
             }
 
             ml.putVariable("q", DAMPING_FACTOR);
