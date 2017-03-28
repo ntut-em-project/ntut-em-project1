@@ -1,12 +1,16 @@
 package ntut.csie.engineering_mathematics.project.proj01.models;
 
+import javafx.util.Pair;
 import ntut.csie.engineering_mathematics.project.helper.Crypt;
 import ntut.csie.engineering_mathematics.project.proj01.Storage;
 import ntut.csie.engineering_mathematics.project.proj01.config.App;
 
+import java.security.KeyPair;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
@@ -47,6 +51,14 @@ public class Relation {
         _hash = calcHashTwoWebsite(ref, tgt);
 
         _relationPool.put(_hash, this);
+    }
+
+    public int getReferenceId(){
+        return _id1;
+    }
+
+    public int getTargetId(){
+        return _id2;
     }
 
     public static void init() {
@@ -107,6 +119,14 @@ public class Relation {
 
 
         return true;
+    }
+
+    public static ArrayList<Relation> all(){
+        ArrayList<Relation> ret = new ArrayList<>();
+
+        ret.addAll(_relationPool.values());
+
+        return ret;
     }
 
 }

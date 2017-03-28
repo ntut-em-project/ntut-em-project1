@@ -198,4 +198,8 @@ public class Website {
 
         return true;
     }
+
+    public static int getCurrentMaxId(){
+        return _currentMaxId;
+    }
 }
