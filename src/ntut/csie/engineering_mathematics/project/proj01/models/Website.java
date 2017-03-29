@@ -1,5 +1,6 @@
 package ntut.csie.engineering_mathematics.project.proj01.models;
 
+import com.mathworks.matlab.types.Complex;
 import com.sun.istack.internal.Nullable;
 import ntut.csie.engineering_mathematics.project.helper.Crypt;
 import ntut.csie.engineering_mathematics.project.proj01.Storage;
@@ -98,9 +99,25 @@ public class Website {
     }
 
     public Website setTitle(String title) {
+        if(title.equals(_title)) return this;
+
         _title = title;
+        _synced = false;
 
         return this;
+    }
+
+    public Website setPageRank(double pr) {
+        if(pr==_pageRank) return this;
+
+        _pageRank = pr;
+        _synced = false;
+
+        return this;
+    }
+
+    public Website setPageRank(Complex pr) {
+        return setPageRank(pr.real);
     }
 
     public String getUrlHash() {
@@ -167,20 +184,23 @@ public class Website {
             ConcurrentSkipListMap<Integer, Website> copiedPool = new ConcurrentSkipListMap<>(_websitePool);
             for (Website website : copiedPool.values()) {
                 PreparedStatement ps = Storage.getConnection().prepareStatement(
-                        "INSERT INTO `websites` (`id`, `url_hash`, `title`, `url`, `create_time`, `view_time`) " +
-                                "VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY " +
-                                "UPDATE title=?, view_time=?"
+                        "INSERT INTO `websites` (`id`, `url_hash`, `title`, `url`, `create_time`, `view_time`, `page_rank`) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY " +
+                                "UPDATE title=?, view_time=?, page_rank=?"
                 );
                 if (website._synced) continue;
-                ps.setInt(1, website.getId());
-                ps.setString(2, website._urlHash);
-                ps.setString(3, website._title);
-                ps.setString(4, website._url);
-                ps.setTimestamp(5, website._createTime);
-                ps.setTimestamp(6, website._viewTime);
+                int idx=0;
+                ps.setInt(++idx, website.getId());
+                ps.setString(++idx, website._urlHash);
+                ps.setString(++idx, website._title);
+                ps.setString(++idx, website._url);
+                ps.setTimestamp(++idx, website._createTime);
+                ps.setTimestamp(++idx, website._viewTime);
+                ps.setDouble(++idx, website._pageRank);
 
-                ps.setString(7, website._title);
-                ps.setTimestamp(8, website._viewTime);
+                ps.setString(++idx, website._title);
+                ps.setTimestamp(++idx, website._viewTime);
+                ps.setDouble(++idx, website._pageRank);
 
                 try {
                     ps.execute();
@@ -201,5 +221,10 @@ public class Website {
 
     public static int getCurrentMaxId(){
         return _currentMaxId;
+    }
+
+    @Nullable
+    public static Website getWebsiteById(int id){
+        return _websitePool.get(id);
     }
 }

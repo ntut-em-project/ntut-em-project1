@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class Proj01CalcPageRank {
     private static double DAMPING_FACTOR = 0.85;
-    private static int INERATOR_COUNT = 50;
+    private static int ITERATOR_COUNT = 100;
 
     public static void main(String[] args) {
         Website.init();
@@ -44,9 +44,9 @@ public class Proj01CalcPageRank {
             System.out.println("Calcuating probability matrix...");
             for (int i = 0; i < N; i++) {
                 ml.eval(String.format("count = nnz(P(:,%d));", i + 1));
-                int count = ml.<Double>getVariable("count").intValue();
-                if(count != 0){
-                    ml.eval(String.format("P(:,%d) = P(:,%d) / %d;", i + 1, i + 1, count));
+                Double count = ml.<Double>getVariable("count");
+                if (count.intValue() != 0) {
+                    ml.eval(String.format("P(:,%d) = P(:,%d) / %f;", i + 1, i + 1, count));
                 }
             }
 
@@ -59,29 +59,42 @@ public class Proj01CalcPageRank {
             /*
               Using PAP-1
              */
-            System.out.println("Calc using PAP-1...");
-            final long PAP_START_TIME = System.nanoTime();
+            //System.out.println("Calculate using PAP-1...");
+            //final long PAP_START_TIME = System.nanoTime();
+            /*
             System.out.println("Calc eigenvalues and eigenvectors...");
             ml.eval("[Q D] = eig(A);");
             ml.eval("D = sparse(D);");
-            System.out.println("Mul ing...");
-            ml.eval(String.format("Rn = Q * D ^ %d * Q^-1", INERATOR_COUNT));
-            final long PAP_END_TIME = System.nanoTime();
+            System.out.println("Multiplying...");
+            ml.eval(String.format("Rn = Q * (D ^ %d) * (Q^-1) * R;", ITERATOR_COUNT));
+            */
+            //final long PAP_END_TIME = System.nanoTime();
 
             /*
-              Using Normal mul
+              Using Normal Multiplying
              */
-            System.out.println("Calc using normal mul...");
+            System.out.println("Calculate using normal mul...");
             final long NORMAL_MUL_START_TIME = System.nanoTime();
-            System.out.println("Mul ing...");
-            ml.eval(String.format("Rn2 = A ^ %d", INERATOR_COUNT));
+            System.out.println("Multiplying...");
+            ml.eval(String.format("Rn2 = (A ^ %d) * R;", ITERATOR_COUNT));
             final long NORMAL_MUL_END_TIME = System.nanoTime();
 
 
-            System.out.println(String.format("使用對角矩陣相乘時間: %dns", PAP_END_TIME - PAP_START_TIME));
+            //System.out.println(String.format("使用對角矩陣相乘時間: %dns", PAP_END_TIME - PAP_START_TIME));
             System.out.println(String.format("使用一般乘法時間: %dns", NORMAL_MUL_END_TIME - NORMAL_MUL_START_TIME));
 
+            double[] R;
+            //ml.getVariable("Rn2");
+            R = ml.<double[]>getVariable("Rn2");
+            System.out.println(R.getClass());
+            for (int i = 0, j = R.length; i < j; i++) {
+                Website w = Website.getWebsiteById(i + 1);
+                if (w != null) {
+                    w.setPageRank(R[i]);
+                }
+            }
 
+            Website.commit();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
