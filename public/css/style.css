@@ -1,0 +1,37 @@
+@charset "UTF-8";
+body{
+    font-size: 16px;
+}
+.title{
+    width: 500px;
+    height: 93px;
+    font-size: 0;
+    line-height: 0;
+    color: transparent;
+    text-indent: -99999px;
+    background: url(../image/logo.png) no-repeat center/contain;
+}
+
+.search-container{
+    padding-top: 120px;
+    padding-left: 150px;
+}
+
+.search-container .content{
+
+    text-align: left;
+}
+
+cite{
+    color: #006621;
+    display:block;
+    font-size: smaller;
+}
+
+h3>a{
+    font-size: 18px;
+}
+
+.result h3{
+    margin-bottom: 0;
+}
