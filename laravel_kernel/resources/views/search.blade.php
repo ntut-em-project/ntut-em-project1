@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NTUT 工程數學專題 PageRank</title>
+    <title>{{$input}} - NTUT 2017Spring 工程數學專題 PageRank</title>
 
     @include('common')
 
@@ -77,7 +77,7 @@
                     <ul style="margin-left:1.3em;margin-bottom:2em">
                         <li>請檢查有無錯別字</li>
                         <li>試試以其他關鍵字搜尋。</li>
-                        <li>試試<a href="https://www.google.com.tw/search?q={{urlencode($input)}}" target="_blank">Google 搜尋</a></li>
+                        <li>試試 <a href="https://www.google.com.tw/search?q={{urlencode($input)}}" target="_blank">Google 搜尋</a></li>
                     </ul>
                 </div>
             </div>
@@ -89,19 +89,17 @@
                 </h3>
                 <p>
                     <cite>{{ $web->url}}</cite>
-                    <cite><b>PageRank:</b> {{$web->page_rank}}</cite>
+                    <cite><b>PageRank:</b> {{number_format(($web->page_rank - $range['min']) * 10 / $range['diff'], 30)}}</cite>
                 </p>
             </div>
         @endforeach
     </div>
-
-
 
     <div class="links">
         {{ $result->links() }}
     </div>
 
 </div>
-</div>
+@include('footer')
 </body>
 </html>

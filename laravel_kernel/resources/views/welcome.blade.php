@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NTUT 工程數學專題 PageRank</title>
+    <title>NTUT 2017Spring 工程數學專題 PageRank</title>
 
     @include('common')
 

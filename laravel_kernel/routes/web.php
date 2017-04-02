@@ -44,19 +44,27 @@ Route::get('/search', function () {
         return redirect('');
     }
 
+    $range = Website::getRange();
+
     $websites = Website::select('title', 'url', 'page_rank')
         ->orderBy('page_rank', 'DESC')
+        ->orderBy('id', 'ASC')
         ->where(function ($query) use ($searchArray) {
             foreach ($searchArray as $k) {
                 $query->orWhere('title', 'LIKE', '%' . $k . '%');
             }
         });
 
+    if(request('e', '0')==='0'){
+        $websites=$websites->where('title', 'NOT LIKE', '%--ERROR PAGE--%');
+   }
+
 
     $result = $websites->paginate(10)->appends(Input::except('page'));
 
     return view('search', [
         'result' => $result,
-        'input' => $query
+        'input' => $query,
+        'range'   =>  $range
     ]);
 });
