@@ -28,6 +28,10 @@ Route::any('/', function(){
     return view('index');
 });
 
+Route::any('em_proj_01', function(){
+    return redirect('em_proj1');
+});
+
 Route::group(['prefix'=>'em_proj1'], function(){
     Route::get('/', function () {
         return view('em_proj1.welcome');
