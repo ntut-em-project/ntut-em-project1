@@ -24,56 +24,63 @@ use \Illuminate\Support\Facades\Input;
 });
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::any('/', function(){
+    return view('index');
 });
 
+Route::group(['prefix'=>'em_proj1'], function(){
+    Route::get('/', function () {
+        return view('em_proj1.welcome');
+    });
 
-Route::get('/search', function () {
 
-    $query = request('q');
-    $searchArray = [];
-    foreach (explode(' ', $query) as $str) {
-        $str = trim($str);
-        if (!empty($str)) {
-            $searchArray[] = $str;
+    Route::get('search', function () {
+
+        $query = request('q');
+        $searchArray = [];
+        foreach (explode(' ', $query) as $str) {
+            $str = trim($str);
+            if (!empty($str)) {
+                $searchArray[] = $str;
+            }
         }
-    }
 
-    if (count($searchArray) === 0) {
-        return redirect('');
-    }
+        if (count($searchArray) === 0) {
+            return redirect('');
+        }
 
-    $range = Website::getRange();
+        $range = Website::getRange();
 
-    $websites = Website::select('title', 'url', 'page_rank')
-        ->orderBy('page_rank', 'DESC')
-        ->orderBy('id', 'ASC')
-        ->where(function ($query) use ($searchArray) {
-            $query->where(function($query) use ($searchArray){
-                foreach ($searchArray as $k) {
-                    $query->where('title', 'LIKE', '%' . $k . '%');
-                }
+        $websites = Website::select('title', 'url', 'page_rank')
+            ->orderBy('page_rank', 'DESC')
+            ->orderBy('id', 'ASC')
+            ->where(function ($query) use ($searchArray) {
+                $query->where(function($query) use ($searchArray){
+                    foreach ($searchArray as $k) {
+                        $query->where('title', 'LIKE', '%' . $k . '%');
+                    }
+                });
+                /*
+                $query->orWhere(function($query) use ($searchArray){
+                    foreach ($searchArray as $k) {
+                        $query->where('url', 'LIKE', '%' . $k . '%');
+                    }
+                });
+                */
             });
-            /*
-            $query->orWhere(function($query) use ($searchArray){
-                foreach ($searchArray as $k) {
-                    $query->where('url', 'LIKE', '%' . $k . '%');
-                }
-            });
-            */
-        });
 
-    if(request('e', '0')==='0'){
-        $websites=$websites->where('title', 'NOT LIKE', '%--ERROR PAGE--%');
-   }
+        if(request('e', '0')==='0'){
+            $websites=$websites->where('title', 'NOT LIKE', '%--ERROR PAGE--%');
+       }
 
 
-    $result = $websites->paginate(10)->appends(Input::except('page'));
+        $result = $websites->paginate(10)->appends(Input::except('page'));
 
-    return view('search', [
-        'result' => $result,
-        'input' => $query,
-        'range'   =>  $range
-    ]);
+        return view('em_proj1.search', [
+            'result' => $result,
+            'input' => $query,
+            'range'   =>  $range
+        ]);
+    });
+
 });

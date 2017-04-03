@@ -3,7 +3,7 @@
 <head>
     <title>{{$input}} - NTUT 2017Spring 工程數學專題 PageRank</title>
 
-    @include('common')
+    @include('em_proj1.common')
 
     <link rel="stylesheet" href="{{asset('css/index.min.css')}}">
 
@@ -13,12 +13,12 @@
     <div class="sfbg " style="margin-top:-20px">
         <div class="sfbgg" style="height:95px;border-bottom: 1px solid #ebebeb"></div>
     </div>
-    <form class="tsf" action="{{asset('search')}}" style="overflow:visible" id="tsf" method="GET" name="f"
+    <form class="tsf" action="{{url('em_proj1/search')}}" style="overflow:visible" id="tsf" method="GET" name="f"
           onsubmit="return q.value!=''" role="search">
         <div data-jibp="" data-jiis="uc" id="tophf"></div>
         <div class="tsf-p">
             <div class="logocont" id="logocont"><h1><a
-                            href="{{asset('/')}}"
+                            href="{{url('em_proj1')}}"
                             title="首頁" id="logo" data-hveid="3"><img
                                 src="{{asset('image/logo.png')}}" alt=""
                                 width="120" ></a></h1></div>
@@ -100,6 +100,6 @@
     </div>
 
 </div>
-@include('footer')
+@include('em_proj1.footer')
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <title>NTUT 2017Spring 工程數學專題 PageRank</title>
 
-    @include('common')
+    @include('em_proj1.common')
 
     <link rel="stylesheet" href="{{asset('css/index.min.css')}}">
 
@@ -14,7 +14,7 @@
         <div class="title">工程數學專題 PageRank</div>
         <div style="height:32px">
         </div>
-        <form class="tsf" action="{{asset('search')}}" style="overflow:visible" id="tsf" method="GET" name="f"
+        <form class="tsf" action="{{url('em_proj1/search')}}" style="overflow:visible" id="tsf" method="GET" name="f"
               onsubmit="return q.value!=''" role="search">
             <div class="tsf-p">
                 <div class="sfibbbc">
@@ -64,7 +64,7 @@
     </div>
     
     <div style="position: absolute;bottom: 0;left: 0;width: 100%;">
-        @include('footer')
+        @include('em_proj1.footer')
     </div>
 </div>
 
