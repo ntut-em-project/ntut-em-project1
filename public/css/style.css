@@ -15,6 +15,7 @@ body{
 .search-container{
     padding-top: 120px;
     padding-left: 150px;
+    min-height: calc(100vh - 75px);
 }
 
 .search-container .content{
