@@ -50,9 +50,18 @@ Route::get('/search', function () {
         ->orderBy('page_rank', 'DESC')
         ->orderBy('id', 'ASC')
         ->where(function ($query) use ($searchArray) {
-            foreach ($searchArray as $k) {
-                $query->orWhere('title', 'LIKE', '%' . $k . '%');
-            }
+            $query->where(function($query) use ($searchArray){
+                foreach ($searchArray as $k) {
+                    $query->where('title', 'LIKE', '%' . $k . '%');
+                }
+            });
+            /*
+            $query->orWhere(function($query) use ($searchArray){
+                foreach ($searchArray as $k) {
+                    $query->where('url', 'LIKE', '%' . $k . '%');
+                }
+            });
+            */
         });
 
     if(request('e', '0')==='0'){

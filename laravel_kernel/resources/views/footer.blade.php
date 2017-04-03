@@ -4,7 +4,7 @@
             <div id="fbar" class="_Zvd" style="left:0;right:0">
                 <div class="_HR" style="visibility: visible;" id="swml">
                     <div class="_uIb">
-                        <span>105下工程數學專題#1 - 林煒淳/許乾爹</span>
+                        <span>105下工程數學專題#1 Group 4 - 林煒淳 / 許景程</span>
 
                     </div>
                 </div>

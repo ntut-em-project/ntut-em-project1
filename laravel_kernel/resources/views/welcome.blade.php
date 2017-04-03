@@ -62,7 +62,11 @@
                 </div>
             </div></form>
     </div>
+    
+    <div style="position: absolute;bottom: 0;left: 0;width: 100%;">
+        @include('footer')
+    </div>
 </div>
-</div>
+
 </body>
 </html>
