@@ -35,7 +35,6 @@ Route::group(['prefix'=>'em_proj_01'], function(){
 
 
     Route::get('search', function () {
-
         $query = request('q');
         $searchArray = [];
         foreach (explode(' ', $query) as $str) {
@@ -50,7 +49,6 @@ Route::group(['prefix'=>'em_proj_01'], function(){
         }
 
         $range = Website::getRange();
-
         $websites = Website::select('title', 'url', 'page_rank')
             ->orderBy('page_rank', 'DESC')
             ->orderBy('id', 'ASC')
@@ -60,19 +58,7 @@ Route::group(['prefix'=>'em_proj_01'], function(){
                         $query->where('title', 'LIKE', '%' . $k . '%');
                     }
                 });
-                /*
-                $query->orWhere(function($query) use ($searchArray){
-                    foreach ($searchArray as $k) {
-                        $query->where('url', 'LIKE', '%' . $k . '%');
-                    }
-                });
-                */
             });
-
-        if(request('e', '0')==='0'){
-            $websites=$websites->where('title', 'NOT LIKE', '%--ERROR PAGE--%');
-       }
-
 
         $result = $websites->paginate(10)->appends(Input::except('page'));
 
@@ -82,5 +68,4 @@ Route::group(['prefix'=>'em_proj_01'], function(){
             'range'   =>  $range
         ]);
     });
-
 });

@@ -89,7 +89,10 @@
                 </h3>
                 <p>
                     <cite>{{ $web->url}}</cite>
-                    <cite><b>PageRank:</b> {{number_format(($web->page_rank - $range['min']) * 10 / $range['diff'], 30)}}</cite>
+                    <cite>
+                        <b>PageRank:</b>
+                        {{number_format(($web->page_rank - $range['min']) * 10 / $range['diff'], 30)}}
+                    </cite>
                 </p>
             </div>
         @endforeach
