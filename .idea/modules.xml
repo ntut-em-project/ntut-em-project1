@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ntut_em_project_web.iml" filepath="$PROJECT_DIR$/ntut_em_project_web.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ntut_em_project.iml" filepath="$PROJECT_DIR$/ntut_em_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java/java.iml" filepath="$PROJECT_DIR$/java/java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web/web.iml" filepath="$PROJECT_DIR$/web/web.iml" />
     </modules>
   </component>
 </project>
