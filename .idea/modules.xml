@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ntut_em_project_web.iml" filepath="$PROJECT_DIR$/ntut_em_project_web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ntut_em_project.iml" filepath="$PROJECT_DIR$/ntut_em_project.iml" />
     </modules>
   </component>
 </project>
